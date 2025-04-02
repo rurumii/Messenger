@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35913.81 d17.13
+VisualStudioVersion = 17.13.35913.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger", "Messenger\Messenger.csproj", "{9DD29783-0C48-42A8-B8C9-DA8FA6DFE63A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessengerApiGateway", "Messenger\MessengerApiGateway.csproj", "{9DD29783-0C48-42A8-B8C9-DA8FA6DFE63A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{4432AAA7-2D0F-4EDB-9F0C-941CE7A83C9D}"
 EndProject

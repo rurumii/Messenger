@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserService.Data;
 
@@ -10,9 +11,11 @@ using UserService.Data;
 namespace UserService.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250329183243_AddProfileFields")]
+    partial class AddProfileFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,18 +46,18 @@ namespace UserService.Migrations
                     b.Property<string>("ProfileImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserTag")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UsernameTag")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("UserTag")
+                    b.HasIndex("UsernameTag")
                         .IsUnique()
-                        .HasFilter("[UserTag] IS NOT NULL");
+                        .HasFilter("[UsernameTag] IS NOT NULL");
 
                     b.ToTable("Users");
                 });

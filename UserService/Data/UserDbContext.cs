@@ -7,5 +7,15 @@ namespace UserService.Data
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+            .HasIndex(u => u.UserTag)
+            .IsUnique()
+            .HasFilter("[UserTag] IS NOT NULL");
+        }
     }
 }

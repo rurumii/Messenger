@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using MessageService.Data;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace MessageService
 {
@@ -8,11 +11,13 @@ namespace MessageService
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddDbContext<MessageDbContext>(options =>
+               options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
 
             var app = builder.Build();
 
