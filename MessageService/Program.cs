@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MessageService.Data;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using MessageService.Mapping;
 
 namespace MessageService
 {
@@ -17,7 +18,7 @@ namespace MessageService
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            builder.Services.AddAutoMapper(typeof(MessageProfile));
 
             var app = builder.Build();
 

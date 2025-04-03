@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UserService.Data;
+using UserService.Mapping;
+using AutoMapper;
 
 namespace UserService
 {
@@ -13,6 +15,9 @@ namespace UserService
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
+
+
 
             builder.Services.AddDbContext<UserDbContext>(options => 
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

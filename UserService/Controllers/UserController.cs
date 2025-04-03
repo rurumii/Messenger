@@ -1,38 +1,41 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UserService.Data;
 using UserService.Models;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace UserService.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : ControllerBase    
     {
         private readonly UserDbContext _context;
+        private readonly IMapper _mapper;
 
-        public UserController(UserDbContext context)
+        public UserController(UserDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegistrationDTO dto)
+        public async Task<IActionResult> Register([FromBody] RegistrationDTO dto)
         {
            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = new User
+           if (await _context.Users.AnyAsync(u => u.Email == dto.Email ))
             {
-                Username = dto.Username,
-                Email = dto.Email,
-                PasswordHash = dto.PasswordHash,
-                UserTag = dto.UserTag
-            };
+                return Conflict(new { message = "User with this email already exists" });
+            }
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            var user = _mapper.Map<User>(dto);
+
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
 
             return Ok(new
             {
@@ -45,9 +48,9 @@ namespace UserService.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetUserById(int id)
+        public async Task<IActionResult> GetUserById(int id)
         {
-            var user = _context.Users.Find(id);
+            var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
                 return NotFound(new { message = "User not found!" });
@@ -62,23 +65,23 @@ namespace UserService.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = _context.Users.Find(id);
+            var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
                 return NotFound(new { message = "User not found!" });
             }
 
             _context.Users.Remove(user);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok(new { message = "User deleted!" });
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginDTO loginDto)
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
         {
-            var user = _context.Users.FirstOrDefault(u =>
+            var user = await _context.Users.FirstOrDefaultAsync(u =>
             u.Email == loginDto.Email &&
             u.PasswordHash == loginDto.PasswordHash);
 
@@ -97,38 +100,33 @@ namespace UserService.Controllers
         }
 
         [HttpGet("all")]
-        public IActionResult GetAllUsers()
+        public async Task<IActionResult> GetAllUsers()
         {
-            var users = _context.Users.ToList();
+            var users = await _context.Users.ToListAsync();
 
             return Ok(users);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] UpdateUserDTO updatedUser)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDTO updatedUser)
         {
-            var user = _context.Users.Find(id);
+            var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
                 return NotFound(new { message = "User not found" });
             }
+            
+            _mapper.Map(updatedUser, user);
 
-            user.Username = updatedUser.Username;
-            user.Email = updatedUser.Email;
-            user.PasswordHash = updatedUser.PasswordHash;
-            user.UserTag = updatedUser.UserTag;
-            user.ProfileImageUrl = updatedUser.ProfileImageUrl;
-            user.Bio = updatedUser.Bio;
-
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(new { message = "User updated succesfully" });
         }
 
         [HttpGet("by-tag/{tag}")]
-        public IActionResult GetUserByTag(string tag)
+        public async Task<IActionResult> GetUserByTag(string tag)
         {
-            var user = _context.Users.FirstOrDefault(u => u.UserTag == tag);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserTag == tag);
 
             if (user == null)
             {

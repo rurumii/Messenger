@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MessageService.Data;
 using MessageService.Models;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+
 namespace MessageService.Controllers
 {
     [Route("api/messages")]
@@ -8,56 +11,53 @@ namespace MessageService.Controllers
     public class MessageController : ControllerBase
     {
         private readonly MessageDbContext _context;
+        private readonly IMapper _mapper;
         
-        public MessageController(MessageDbContext context)
+        public MessageController(MessageDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost("send")]
-        public IActionResult SendMessage([FromBody] SendMessageDTO message)
+        public async Task<IActionResult> SendMessage([FromBody] SendMessageDTO message)
         {
             if (string.IsNullOrWhiteSpace(message.Content))
             {
                 return BadRequest(new { message = "Message content cannot be empty" });
             }
 
-            var newMessage = new Message
-            {
-                ChatId = message.ChatId,
-                SenderId = message.SenderId,
-                ReceiverId = message.ReceiverId,
-                Content = message.Content,
-                Timestamp = message.Timestamp,
-            };
-            _context.Messages.Add(newMessage);
-            _context.SaveChanges();
+            var newMessage = _mapper.Map<Message>(message);
+            newMessage.Timestamp = DateTime.UtcNow;
+            await _context.Messages.AddAsync(newMessage);
+            await _context.SaveChangesAsync();
 
             return Ok(new { message = "Message sent!", newMessageId = newMessage.Id });
         }
 
         [HttpGet("chat/{chatId}")]
-        public IActionResult GetMessagesByChat(int chatId)
+        public async Task<IActionResult> GetMessagesByChat(int chatId)
         {
-            var messages = _context.Messages
+            var messages = await _context.Messages
                 .Where(m => m.ChatId == chatId)
                 .OrderBy(m => m.Timestamp)
-                .ToList();
+                .ToListAsync();
 
             return Ok(messages);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteMessage (int id)
+        public async Task<IActionResult> DeleteMessage (int id)
         {
-            var message = _context.Messages.Find(id);
+            var message = await _context.Messages.FindAsync(id);
+
             if (message == null)
             {
                 return NotFound(new { message = "Message not found" });
             }
 
             _context.Messages.Remove(message);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(new { message = "Message deleted" });
         }
