@@ -66,7 +66,7 @@ namespace MessageService.Controllers
         [HttpGet("{chatId}")]
         public async Task<IActionResult> GetChatById (int chatId)
         {
-            var chat = _context.Chats.FirstOrDefault(c=>c.Id == chatId);
+            var chat = await _context.Chats.FirstOrDefaultAsync(c=>c.Id == chatId);
 
             if (chat == null)
             {

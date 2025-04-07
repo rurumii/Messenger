@@ -3,6 +3,8 @@ using UserService.Data;
 using UserService.Models;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using UserService.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace UserService.Controllers
 {
@@ -12,11 +14,13 @@ namespace UserService.Controllers
     {
         private readonly UserDbContext _context;
         private readonly IMapper _mapper;
+        private readonly JwtService _jwtService;
 
-        public UserController(UserDbContext context, IMapper mapper)
+        public UserController(UserDbContext context, IMapper mapper, JwtService jwtService)
         {
             _context = context;
             _mapper = mapper;
+            _jwtService = jwtService;
         }
 
         [HttpPost("register")]
@@ -46,22 +50,19 @@ namespace UserService.Controllers
             });
 
         }
-
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _context.Users.FindAsync(id);
+
             if (user == null)
             {
                 return NotFound(new { message = "User not found!" });
             }
 
-            return Ok(new
-            {
-                id = user.Id,
-                username = user.Username,
-                email = user.Email,
-            });
+            var userDto = _mapper.Map<PublicUserDto>(user);
+            return Ok(userDto);
         }
 
         [HttpDelete("{id}")]
@@ -90,13 +91,15 @@ namespace UserService.Controllers
                 return Unauthorized(new { message = "Invalid email or password." });
             }
 
+            var token = _jwtService.GenerateToken(user.Id, user.Username);
+
             return Ok(new
             {
-                message = "Logged in successfully!",
+                message = "Login successfull",
+                token = token,
                 userId = user.Id,
-                username = user.Username
+                username = user.Username,
             });
-
         }
 
         [HttpGet("all")]
@@ -107,6 +110,7 @@ namespace UserService.Controllers
             return Ok(users);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDTO updatedUser)
         {

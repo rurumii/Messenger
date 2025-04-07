@@ -3,6 +3,8 @@ using MessageService.Data;
 using MessageService.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using MessageService.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MessageService.Controllers
 {
@@ -12,13 +14,16 @@ namespace MessageService.Controllers
     {
         private readonly MessageDbContext _context;
         private readonly IMapper _mapper;
+        private readonly UserServiceClient _userService;
         
-        public MessageController(MessageDbContext context, IMapper mapper)
+        public MessageController(MessageDbContext context, IMapper mapper, UserServiceClient userService)
         {
             _context = context;
             _mapper = mapper;
+            _userService = userService;
+            
         }
-
+        [Authorize]
         [HttpPost("send")]
         public async Task<IActionResult> SendMessage([FromBody] SendMessageDTO message)
         {
@@ -27,12 +32,25 @@ namespace MessageService.Controllers
                 return BadRequest(new { message = "Message content cannot be empty" });
             }
 
+            var sender = await _userService.GetUserByIdAsync(message.SenderId);
+            var receiver = await _userService.GetUserByIdAsync(message.ReceiverId);
+
+            if (sender == null || receiver == null)
+            {
+                return NotFound(new { message = "Sender or receiver not found" });
+            }
             var newMessage = _mapper.Map<Message>(message);
             newMessage.Timestamp = DateTime.UtcNow;
+
             await _context.Messages.AddAsync(newMessage);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Message sent!", newMessageId = newMessage.Id });
+            return Ok(new { 
+                message = "Message sent!",
+                newMessageId = newMessage.Id, 
+                chatId = newMessage.ChatId, 
+                timestamp = newMessage.Timestamp 
+            });
         }
 
         [HttpGet("chat/{chatId}")]
@@ -61,5 +79,13 @@ namespace MessageService.Controllers
 
             return Ok(new { message = "Message deleted" });
         }
+
+        [HttpGet("test-user/{id}")]
+        public async Task<IActionResult> TestUser (int id)
+        {
+            var user = await _userService.GetUserByIdAsync(id);
+            return user == null ? NotFound("User not found") : Ok(user);
+        }
+        
     }
 }
