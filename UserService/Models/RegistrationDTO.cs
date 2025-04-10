@@ -8,7 +8,7 @@ namespace UserService.Models
         public string Username { get; set; }
         public string? UserTag { get; set; }
         [Required]
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
         [Required]
         [EmailAddress]
         public string Email { get; set; }

@@ -16,12 +16,13 @@ namespace UserService.Services
             _config = config;
         }
 
-        public string GenerateToken(int userId, string username)
+        public string GenerateToken(int userId, string username, string role)
         {
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                new Claim(ClaimTypes.Name, username)
+                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Role, role)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));

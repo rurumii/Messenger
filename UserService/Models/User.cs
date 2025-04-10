@@ -24,5 +24,9 @@ namespace UserService.Models
 
         [Display(Description = "Optional user bio shown in profile")]
         public string? Bio {  get; set; }
+
+        [Required]
+        public string Role { get; set; } = "User";
+        public ICollection<Friend> Friends { get; set; }
     }
 }

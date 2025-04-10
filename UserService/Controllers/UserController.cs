@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using UserService.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace UserService.Controllers
 {
@@ -37,6 +38,8 @@ namespace UserService.Controllers
             }
 
             var user = _mapper.Map<User>(dto);
+            var hasher = new PasswordHasher<User>();
+            user.PasswordHash = hasher.HashPassword(user, dto.Password);
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
@@ -83,15 +86,21 @@ namespace UserService.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u =>
-            u.Email == loginDto.Email &&
-            u.PasswordHash == loginDto.PasswordHash);
+            u.Email == loginDto.Email);
 
             if (user == null)
             {
                 return Unauthorized(new { message = "Invalid email or password." });
             }
 
-            var token = _jwtService.GenerateToken(user.Id, user.Username);
+            var hasher = new PasswordHasher<User>();
+            var result = hasher.VerifyHashedPassword(user, user.PasswordHash, loginDto.Password);
+            if (result == PasswordVerificationResult.Failed)
+            {
+                return Unauthorized(new { message = "Invalid email or password" });
+            }
+
+            var token = _jwtService.GenerateToken(user.Id, user.Username, user.Role);
 
             return Ok(new
             {

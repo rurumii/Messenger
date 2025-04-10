@@ -16,6 +16,9 @@ namespace UserService.Data
             .HasIndex(u => u.UserTag)
             .IsUnique()
             .HasFilter("[UserTag] IS NOT NULL");
+
+            modelBuilder.Entity<Friend>()
+                .HasOne
         }
     }
 }
