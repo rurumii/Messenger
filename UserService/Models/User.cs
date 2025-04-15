@@ -28,5 +28,7 @@ namespace UserService.Models
         [Required]
         public string Role { get; set; } = "User";
         public ICollection<Friend> Friends { get; set; }
+        public ICollection<Friend> AddedMe { get; set; } 
+
     }
 }

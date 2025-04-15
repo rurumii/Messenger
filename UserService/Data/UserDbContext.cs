@@ -7,6 +7,7 @@ namespace UserService.Data
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Friend> Friends { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,7 +19,16 @@ namespace UserService.Data
             .HasFilter("[UserTag] IS NOT NULL");
 
             modelBuilder.Entity<Friend>()
-                .HasOne
+                .HasOne(f => f.User)
+                .WithMany(u => u.Friends)
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Friend>()
+                .HasOne(f => f.FriendUser)
+                .WithMany(u => u.AddedMe)
+                .HasForeignKey(f => f.FriendUserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

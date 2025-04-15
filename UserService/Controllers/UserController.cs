@@ -156,5 +156,75 @@ namespace UserService.Controllers
                 profileImageUrl = user.ProfileImageUrl
             });
         }
+        [HttpPost("friends")]
+        public async Task<IActionResult> AddFriend([FromBody] AddFriendDto dto)
+        {
+            if (dto.UserId == dto.FriendUserId)
+            {
+                return BadRequest(new { message = "You can't add yourself as a friend" });
+            }
+            var user = await _context.Users.FindAsync(dto.UserId);
+            var friend = await _context.Friends.FindAsync(dto.FriendUserId);
+
+            if (user == null || friend == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+            
+            var existingFriends = await _context.Friends.FirstOrDefaultAsync(f => 
+            f.UserId == dto.UserId && f.FriendUserId == dto.FriendUserId);
+
+            if (existingFriends != null)
+            {
+                return Conflict(new { message = "Already friends" });
+            }
+            var friendship = new Friend
+            {
+                UserId = dto.UserId,
+                FriendUserId = dto.FriendUserId,
+            };
+
+            await _context.Friends.AddAsync(friendship);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Friend added successfully" });
+        }
+
+        [HttpDelete("{userId}/{friendUserId")]
+        public async Task<IActionResult> DeleteFriend(int userId, int friendUserId)
+        {
+            var friendship = await _context.Friends.FirstOrDefaultAsync(f =>
+            f.UserId == userId && f.FriendUserId == friendUserId);
+
+            if (friendship == null)
+            {
+                return NotFound(new { message = "Frienship not found" });
+            }
+
+            _context.Friends.Remove(friendship);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Friend removed" });
+        }
+
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetFriendshipByUserId (int userId)
+        {
+            var friends = await _context.Friends
+                .Where(f => f.UserId == userId)
+                .Select(f => new
+                {
+                    f.FriendUserId,
+                    f.FriendUser.Username,
+                    f.FriendUser.Email
+                })
+                .ToListAsync();
+            if (friends.Count == 0)
+            {
+                return NotFound(new { message = "No friends found" };
+            }
+
+            return Ok(friends);
+        }
     }
 }
