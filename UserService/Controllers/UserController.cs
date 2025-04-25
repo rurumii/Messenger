@@ -190,7 +190,7 @@ namespace UserService.Controllers
             return Ok(new { message = "Friend added successfully" });
         }
 
-        [HttpDelete("{userId}/{friendUserId")]
+        [HttpDelete("{userId}/{friendUserId}")]
         public async Task<IActionResult> DeleteFriend(int userId, int friendUserId)
         {
             var friendship = await _context.Friends.FirstOrDefaultAsync(f =>
@@ -221,7 +221,7 @@ namespace UserService.Controllers
                 .ToListAsync();
             if (friends.Count == 0)
             {
-                return NotFound(new { message = "No friends found" };
+                return NotFound(new { message = "No friends found" });
             }
 
             return Ok(friends);
