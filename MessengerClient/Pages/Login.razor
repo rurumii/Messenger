@@ -1,12 +1,16 @@
-﻿@page "/login"
+﻿@page "/"
 @inject UserApiService UserService
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 @using MessengerClient.Services;
 @using MessengerClient.Models;
 
-<div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="login-card col-md-5">
-        <h2 class="text-center mb-4">Welcome back</h2>
+
+<div class="login-screen">
+    <div class="login-content">
+        <img src="img/logo_final.svg" alt="Logo" class="logo">
+
+        <h2 class="welcome-title">Welcome!</h2>
 
         @if (!string.IsNullOrEmpty(errorMessage))
         {
@@ -18,26 +22,20 @@
             <ValidationSummary />
 
             <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <InputText @bind-Value="loginModel.Email" class="form-control" />
+                <label class="form-label">Email</label>
+                <InputText @bind-Value="loginModel.Email" class="form-control" />
             </div>
 
             <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <InputText @bind-Value="loginModel.Password" type="password" class="form-control" />
+                <label class="form-label">Password</label>
+                <InputText @bind-Value="loginModel.Password" type="password" class="form-control" />
             </div>
 
             <button type="submit" class="btn btn-primary w-100">Log In</button>
         </EditForm>
 
-    </div>
+    </div>  
 </div>
-
-@if (!string.IsNullOrEmpty(errorMessage))
-{
-    <p style="color:red">@errorMessage</p>
-}
-
 
 
 @code{
@@ -50,7 +48,9 @@
         if (result is not null)
         {
             // сохраняем токен
-            Console.WriteLine("TOKEN:" + result.Token);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", result.Token);
+
+            Console.WriteLine("TOKEN: " + result.Token);
             Navigation.NavigateTo("/"); // редирект на главную
         }
         else

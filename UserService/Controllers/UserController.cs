@@ -16,12 +16,14 @@ namespace UserService.Controllers
         private readonly UserDbContext _context;
         private readonly IMapper _mapper;
         private readonly JwtService _jwtService;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(UserDbContext context, IMapper mapper, JwtService jwtService)
+        public UserController(UserDbContext context, IMapper mapper, JwtService jwtService, ILogger<UserController> logger)
         {
             _context = context;
             _mapper = mapper;
             _jwtService = jwtService;
+            _logger = logger;
         }
 
         [HttpPost("register")]
@@ -85,18 +87,24 @@ namespace UserService.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
         {
+
+            _logger.LogInformation("LoginAttempt from: {Email}", loginDto.Email);
+
             var user = await _context.Users.FirstOrDefaultAsync(u =>
             u.Email == loginDto.Email);
 
             if (user == null)
             {
+                _logger.LogWarning("Login failed — no user found with email: {Email}", loginDto.Email);
                 return Unauthorized(new { message = "Invalid email or password." });
             }
 
             var hasher = new PasswordHasher<User>();
             var result = hasher.VerifyHashedPassword(user, user.PasswordHash, loginDto.Password);
+
             if (result == PasswordVerificationResult.Failed)
             {
+                _logger.LogWarning("Login failed — incorrect password for user: {Email}", loginDto.Email);
                 return Unauthorized(new { message = "Invalid email or password" });
             }
 
@@ -109,6 +117,8 @@ namespace UserService.Controllers
                 userId = user.Id,
                 username = user.Username,
             });
+
+            _logger.LogInformation("User logged in successfully: {Email}", loginDto.Email);
         }
 
         [HttpGet("all")]
