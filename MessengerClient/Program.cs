@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using System.Net.Http;
-using System.Net.Http.Json;
-using Microsoft.Extensions.DependencyInjection;
 using MessengerClient.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 
@@ -25,6 +22,8 @@ namespace MessengerClient
             {
                 client.BaseAddress = new Uri("https://localhost:7130/");
             });
+            
+
             builder.Services.AddScoped<UserApiService>();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
             builder.Services.AddAuthorizationCore();

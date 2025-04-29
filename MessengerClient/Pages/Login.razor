@@ -17,7 +17,7 @@
             <div class="alert alert-danger">@errorMessage</div>
         }  
 
-        <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+        <EditForm Model="loginModel" OnValidSubmit="@HandleLogin">
             <DataAnnotationsValidator />
             <ValidationSummary />
 
@@ -32,6 +32,11 @@
             </div>
 
             <button type="submit" class="btn btn-primary w-100">Log In</button>
+            <p class="text-center">
+                No account?
+                <a href="/register">Register</a>
+            </p>
+
         </EditForm>
 
     </div>  

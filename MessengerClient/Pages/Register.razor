@@ -1,0 +1,65 @@
+﻿@page "/register"
+@inject UserApiService UserService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@using MessengerClient.Services;
+@using MessengerClient.Models;
+@using System.Threading.Tasks;
+
+<div class="register-screen">
+    <div class="register-content">
+        <img src="img/logo_final.svg" alt="Logo" class="logo">
+
+        <h2 class="welcome-title">Welcome!</h2>
+
+        <EditForm Model="registerModel" OnValidSubmit="@HandleRegister">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <InputText @bind-Value="registerModel.Email" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <InputText @bind-Value="registerModel.Username" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <InputText @bind-Value="registerModel.Password" type="password" class="form-control"></InputText>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Confirm password</label>
+                <InputText @bind-Value="registerModel.ConfirmPassword" type="password" class="form-control"></InputText>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100">Register</button>
+
+            <p class="text-center">
+                Already have an account?
+                <a href="/">Log in</a>
+            </p>
+        </EditForm>
+    </div>
+</div>
+
+@code{
+    private RegistrationDTO registerModel = new();
+    private string errorMessage = "";
+
+    private async Task HandleRegister()
+    {
+        var result = await UserService.RegisterAsync(registerModel);
+        if (result)
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            errorMessage = "Registration failed";
+        }
+    }
+}

@@ -110,6 +110,7 @@ namespace UserService.Controllers
 
             var token = _jwtService.GenerateToken(user.Id, user.Username, user.Role);
 
+            _logger.LogInformation("User logged in successfully: {Email}", loginDto.Email);
             return Ok(new
             {
                 message = "Login successfull",
@@ -118,7 +119,6 @@ namespace UserService.Controllers
                 username = user.Username,
             });
 
-            _logger.LogInformation("User logged in successfully: {Email}", loginDto.Email);
         }
 
         [HttpGet("all")]
@@ -217,7 +217,7 @@ namespace UserService.Controllers
             return Ok(new { message = "Friend removed" });
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("friend/{userId}")]
         public async Task<IActionResult> GetFriendshipByUserId (int userId)
         {
             var friends = await _context.Friends
