@@ -41,5 +41,11 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
-
+<script>
+    window.scrollToBottom = function (element) {
+        if (element) {
+            element.scrollTop = element.scrollHeight;
+        }
+    };
+</script>
 </html>
