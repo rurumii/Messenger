@@ -25,6 +25,7 @@ namespace MessengerClient
             
 
             builder.Services.AddScoped<UserApiService>();
+            builder.Services.AddScoped<MessageApiService>();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
             builder.Services.AddAuthorizationCore();
             await builder.Build().RunAsync();

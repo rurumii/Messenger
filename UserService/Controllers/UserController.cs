@@ -43,6 +43,8 @@ namespace UserService.Controllers
             var hasher = new PasswordHasher<User>();
             user.PasswordHash = hasher.HashPassword(user, dto.Password);
 
+            user.ProfileImageUrl = "img/default-avatar.png";
+
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
@@ -52,11 +54,12 @@ namespace UserService.Controllers
                 userId = user.Id,
                 username = user.Username,
                 email = user.Email,
-            });
+                profileImageUrl = "/img/default-avatar.png"
+        });
 
         }
         
-        [HttpGet("{id}")]
+        [HttpGet("find/by-id/{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _context.Users.FindAsync(id);
@@ -64,6 +67,12 @@ namespace UserService.Controllers
             if (user == null)
             {
                 return NotFound(new { message = "User not found!" });
+            }
+
+
+            if (string.IsNullOrEmpty(user.ProfileImageUrl))
+            {
+                user.ProfileImageUrl = "img/default-avatar.png";
             }
 
             var userDto = _mapper.Map<PublicUserDto>(user);
@@ -146,26 +155,24 @@ namespace UserService.Controllers
             return Ok(new { message = "User updated succesfully" });
         }
 
-        [HttpGet("by-tag/{tag}")]
-        public async Task<IActionResult> GetUserByTag(string tag)
+        [HttpGet("find/by-query/{query}")]
+        public async Task<IActionResult> GetUserByQuery(string query)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserTag == tag);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserTag == query || u.Username == query);
 
             if (user == null)
             {
                 return NotFound(new { message = "User not found" });
             }
 
-            return Ok(new
+            if (string.IsNullOrEmpty(user.ProfileImageUrl))
             {
-                id = user.Id,
-                username = user.Username,
-                userTag = user.UserTag,
-                email = user.Email,
-                bio = user.Bio,
-                profileImageUrl = user.ProfileImageUrl
-            });
+                user.ProfileImageUrl = "img/default-avatar.png";
+            }
+            var userDto = _mapper.Map<PublicUserDto>(user);
+            return Ok(userDto);
         }
+
         [HttpPost("friends")]
         public async Task<IActionResult> AddFriend([FromBody] AddFriendDto dto)
         {

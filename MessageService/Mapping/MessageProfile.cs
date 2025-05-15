@@ -7,6 +7,8 @@ namespace MessageService.Mapping
         public MessageProfile()
         {
             CreateMap<SendMessageDTO, Message>();
+            CreateMap<Message, MessageDTO>()
+                .ForMember(dest => dest.SenderName, opt => opt.Ignore());
         }
     }
 }

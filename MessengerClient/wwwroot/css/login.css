@@ -1,8 +1,11 @@
 ﻿body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    color: #f0f0f0;
+    /*    font-family: 'Segoe UI', sans-serif;
+    color: #f0f0f0;*/
     background-color: #0f1115;
+    font-family: 'Inter', 'Segoe UI', 'Nunito', sans-serif;
+    font-size: 15px;
+    color: #eaeaea;
 }
 
 .login-screen {
@@ -123,4 +126,15 @@ h2 {
     padding: 0;
     font-size: 0.9rem;
     color: #ff4c4c;
+}
+.text-center {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #ccc;
+    margin-top: 1rem;
+}
+
+.text-center a {
+    color: #a0b3ff;
+    text-decoration: none;
 }

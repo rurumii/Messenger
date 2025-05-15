@@ -20,7 +20,7 @@ namespace MessageService.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("create")]
+        [HttpPost("create")]    
         public async Task<IActionResult> CreateChat([FromBody] CreateChatDTO chat)
         {
             if (chat.User1Id == chat.User2Id)

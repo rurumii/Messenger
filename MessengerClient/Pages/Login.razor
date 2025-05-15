@@ -2,7 +2,9 @@
 @inject UserApiService UserService
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
+@inject AuthenticationStateProvider AuthProvider
 @using MessengerClient.Services;
+@using Microsoft.AspNetCore.Components.Authorization;
 @using MessengerClient.Models;
 
 
@@ -54,9 +56,13 @@
         {
             // сохраняем токен
             await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", result.Token);
-
+            //
+            if (AuthProvider is CustomAuthStateProvider customAuth)
+            {
+                await customAuth.NotifyUserAuthentication(result.Token);
+            }
             Console.WriteLine("TOKEN: " + result.Token);
-            Navigation.NavigateTo("/"); // редирект на главную
+            Navigation.NavigateTo("/main", true); // редирект на главную
         }
         else
         {

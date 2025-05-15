@@ -15,5 +15,6 @@ namespace MessageService.Models
         [Required]
         public string Content { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+        public DateTime? EditedAt { get; set; }
     }
 }

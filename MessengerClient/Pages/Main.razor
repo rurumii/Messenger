@@ -1,0 +1,387 @@
+﻿@page "/main"
+@inject MessageApiService MessageService
+@inject UserApiService UserService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthProvider
+@using MessengerClient.Services;
+@using MessengerClient.Models;
+@using Microsoft.AspNetCore.Components.Authorization;
+@using System.Security.Claims;
+
+
+<div class="layout">
+    <!-- Sidebar with top links + chats + user profile -->
+    <div class="sidebar">
+        <div class="sidebar-top">
+            <button class="sidebar-btn">👥 Friends</button>
+            <button class="sidebar-btn">⚙ Settings</button>
+        </div>
+
+        <div class="chat-list">
+            <div class="new-chat-block">
+                @* // bind — это двусторонняя привязка данных между HTML-элементом и C# переменной *@
+                <input @bind="searchTag" placeholder="User Tag.." class="form-control" />
+                <div class="chat-actions">
+                    <button @onclick="SearchUser">🔍</button>
+                    <button @onclick="CreateChatWithFoundUser" disabled="@(!canCreate)">💬</button>
+                </div>
+            </div>
+
+            @if (foundUser != null)
+            {
+                <div class="found-user-preview">
+                    <img src="@foundUser.ProfileImageUrl" class="avatar" alt="avatar" />
+                    <strong>@foundUser.Username</strong>
+                    @if (!string.IsNullOrEmpty(foundUser.UserTag))
+                    {
+                        <span>(@foundUser.UserTag)</span>
+                    }   
+                    <p>@foundUser.Bio</p>
+                </div>
+            }
+
+            <h3 class="chat-section-title">Chats</h3>
+            @if (chats == null)
+            {
+                <p>Loading..</p>
+            }
+            else if (!chats.Any())
+            {
+                <p>No chats yet</p>
+            }
+            else
+            {
+                @foreach (var chat in chats)
+                {
+                    <div class="chat-item @(chat.Id == selectedChatId ? "selected" : "")"
+                    @onclick="() => SelectChat(chat.Id)">
+                        @GetChatDisplayName(chat)
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="sidebar-bottom">
+            <div class="user-info">
+                <img src="@currentUser?.ProfileImageUrl" class="avatar" alt="avatar" />
+                <div> 
+                    <strong>@currentUser?.Username</strong>
+                    @if (!string.IsNullOrEmpty(currentUser?.UserTag))
+                    {
+                        <div>@currentUser?.UserTag</div>
+                    }
+                </div>
+                <button class="edit-profile">✏</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat content -->
+    @{
+        var selectedChat = GetSelectedChat();
+    }
+    <div class="chat-content">
+        @if (selectedChatId == null)
+        {
+            <div class="welcome-message">
+                <h2>Welcome</h2>
+                <p>Select a chat to start messaging</p>
+                <i class="bi bi-chat-dots"></i>
+            </div>
+        }
+        else if (messages == null)
+        {
+            <p>Loading messages..</p>
+        }
+        else
+        {   
+            @if (selectedChat != null)
+            {
+                <div class="chat-header">
+                    <img src="@GetChatCompanion(selectedChat)?.ProfileImageUrl" class="avatar-small"/>
+                    <strong>@GetChatDisplayName(selectedChat)</strong>
+                </div>
+            }
+
+            <div class="message-list">
+                @foreach (var msg in messages)
+                {
+                    var isMine = msg.SenderId ==  CurrentUserId;
+                    <div class="message-container @(isMine ? "mine" : "theirs")">
+                        <div class="message-bubble">
+                            <div class="message-header">
+
+                                <span class="sender">@msg.SenderName</span>
+
+                                @if (isMine && messageIdPendingDelete != msg.Id)
+                                {
+                                    <button @onclick="() => AskDelete(msg.Id)" title="Delete message" class="icon-button">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </button>
+
+                                }
+                            </div>
+
+                            <div class="text">
+                                @if (isMine && messageIdPendingEdit == msg.Id)
+                                {
+                                    <input @bind="updatedMessageContent" class="form-control editing" />
+                                    <div class="edit-actions">
+                                        <button @onclick="() => ConfirmUpdate(msg.Id)"><i class="bi bi-floppy-fill"></i></button>
+                                        <button @onclick="CancelUpdate">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    @msg.Content
+                                }
+                            </div>
+
+                            @if (isMine && messageIdPendingDelete == msg.Id)
+                            {
+                                <div class="confirm-popup-inline">
+                                    <span>Delete?</span>
+                                    <button @onclick="() => ConfirmDelete(msg.Id)">Yes</button>
+                                    <button @onclick="CancelDelete">No</button>
+                                </div>
+                            }
+                            else if(isMine && messageIdPendingEdit != msg.Id)
+                            {
+                                <button @onclick="() => StartUpdate(msg.Id, msg.Content)" title="Edit message" class="icon-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                    </svg>
+
+                                </button>
+                            }
+
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="send-message-box">
+                <input @bind="newMessageContent" placeholder="Type a message.." class="form-control" />
+                <button class="send-btn" @onclick="SendMessage">Send</button>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+@code {
+    private List<ChatDTO>? chats;
+    private List<MessageDTO> messages;
+    private int? selectedChatId;
+    private int userId;
+    private string searchTag = "";
+    private FoundUserDTO? foundUser;
+    private FoundUserDTO? currentUser;
+    private bool canCreate = false;
+    private string newMessageContent = "";
+    private int CurrentUserId => userId; // readonly alias
+    private Dictionary<int, FoundUserDTO> companions = new();
+    private int? messageIdPendingDelete = null;
+    private int? messageIdPendingEdit = null;
+    private string updatedMessageContent = "";  // Временное хранилище текста
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {   
+            // получение текущего пользователя
+            var authState = await AuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity == null || !user.Identity.IsAuthenticated)
+            {
+                Navigation.NavigateTo("/");
+                return;
+            }
+
+            // проверка, что пользователь вошел в систему
+            var userIdClaim = user.FindFirst("sub") ?? user.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                Navigation.NavigateTo("/");
+                return;
+            }
+
+            // получение айди пользователя из токена
+            userId = int.Parse(userIdClaim.Value);
+
+            // загрузка чатов и текущего пользователя
+            chats = await MessageService.GetUserChatsAsync(userId);
+            currentUser = await UserService.GetUserByIdAsync(userId);
+
+            if (chats != null)
+            {
+                foreach (var chat in chats)
+                {
+                    int companionId = chat.User1Id == userId ? chat.User2Id : chat.User1Id;
+
+                    if (!companions.ContainsKey(companionId))
+                    {
+                        var companionUser = await UserService.GetUserByIdAsync(companionId);
+                        if (companionUser != null)
+                            companions[companionId] = companionUser;
+                    }
+                }
+            }
+        } 
+        // обработка ошибок
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Init error] {ex.Message}");
+        }
+    }
+
+    private async Task SelectChat(int chatId)
+    {
+        Console.WriteLine($"Selected chat: {chatId}");
+        // 
+        selectedChatId = chatId;
+        // очищение старых соо перед загрузкой новых, иначе будут висеть предыдущие
+        messages = null;
+        // await нужен, чтобы дождаться завершения асинхронной операции и получить её результат — список сообщений
+        messages = await MessageService.GetMessagesByChatAsync(chatId);
+    }
+    private async Task SearchUser()
+    {
+        // трим удаляет пробелы
+        foundUser = await UserService.GetUserByQueryAsync(searchTag.Trim());
+        // если оба условия выполнены, кнопка создания чата активируется
+        canCreate = foundUser != null && foundUser.Id != userId;
+    }
+    private async Task CreateChatWithFoundUser()
+    {
+        if (foundUser == null) return;
+
+        var chatDto = new CreateChatDTO
+    {
+        User1Id = userId,
+        User2Id = foundUser.Id,
+            // Name = foundUser.Username
+    };
+
+        var success = await MessageService.CreateChatAsync(chatDto);
+
+        if (success)
+        {
+            chats = await MessageService.GetUserChatsAsync(userId); // обновляем список чатов
+            selectedChatId = chatDto.User2Id; // выбираем новый чат 
+            messages = await MessageService.GetMessagesByChatAsync(selectedChatId.Value); // загружаем сообщения
+            // очищаем все временное
+            searchTag = "";
+            foundUser = null;
+            canCreate = false;
+        }
+    }
+    // 
+    private string GetChatDisplayName(ChatDTO chat)
+    {
+        int companionId = chat.User1Id == userId ? chat.User2Id : chat.User1Id;
+
+        return companions.TryGetValue(companionId, out var user)
+            ? user.Username
+            : $"Chat #{chat.Id}";
+    }
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(newMessageContent) || selectedChatId == null)
+        {
+            return;
+        }
+
+        var message = new SendMessageDTO
+            {
+                ChatId = selectedChatId.Value,
+                SenderId = userId,
+                ReceiverId = chats
+                        .FirstOrDefault(c => c.Id == selectedChatId)?.User1Id == userId
+                        ? chats.First(c => c.Id == selectedChatId).User2Id
+                        : chats.First(c => c.Id == selectedChatId).User1Id,
+                Content = newMessageContent
+            };
+
+        var success = await MessageService.SendMessageAsync(message);
+        if (success)
+        {
+            messages = await MessageService.GetMessagesByChatAsync(selectedChatId.Value);
+            newMessageContent = "";
+        }
+    }
+
+    private async Task DeleteMessage(int messageId)
+    {
+        var success = await MessageService.DeleteMessageAsync(messageId);
+
+        if (success && selectedChatId.HasValue)
+        {
+            messages = await MessageService.GetMessagesByChatAsync(selectedChatId.Value);
+        }
+    }
+
+    private FoundUserDTO? GetChatCompanion(ChatDTO chat)
+    {
+        int companionId = chat.User1Id == userId ? chat.User2Id : chat.User1Id;
+        return companions.TryGetValue(companionId, out var user) ? user : null;
+    }
+
+    private ChatDTO? GetSelectedChat()
+    {
+        return chats?.FirstOrDefault(c => c.Id == selectedChatId);
+    }
+    private void AskDelete(int id)
+    {
+        messageIdPendingDelete = id;
+    }
+    private async Task ConfirmDelete (int id)
+    {
+        await DeleteMessage(id);
+        messageIdPendingDelete = null;
+    }
+    private void CancelDelete()
+    {
+        messageIdPendingDelete = null;
+    }
+    private void StartUpdate(int id, string content)
+    {
+        messageIdPendingEdit = id;
+        updatedMessageContent = content;
+    }
+    private void CancelUpdate()
+    {
+        messageIdPendingEdit = null;
+        updatedMessageContent = "";
+    }
+    private async Task ConfirmUpdate(int id)
+    {
+        if (string.IsNullOrWhiteSpace(updatedMessageContent))
+        {
+            return;
+        }
+
+        var updateDto = new UpdateMessageDto
+        {
+                Content = updatedMessageContent
+        };
+
+        var success = await MessageService.UpdateMessageAsync(id, updateDto);
+
+        if (success && selectedChatId.HasValue)
+        {
+            messages = await MessageService.GetMessagesByChatAsync(selectedChatId.Value);
+            messageIdPendingEdit = null;
+            updatedMessageContent = "";
+        }
+    }
+}

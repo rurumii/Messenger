@@ -1,4 +1,4 @@
-﻿namespace MessageService.Models
+﻿namespace MessengerClient.Models
 {
     public class UpdateChatNameDTO
     {

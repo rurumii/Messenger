@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 using MessageService.Models;
@@ -14,22 +15,20 @@ namespace MessageService.Services
             _http = http;
         }
 
-        public async Task<UserDto?> GetUserByIdAsync (int id)
+        public async Task<PublicUserDto?> GetUserByIdAsync (int id, string token)
         {
-            var response = await _http.GetAsync($"api/users/{id}");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"api/users/find/by-id/{id}");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _http.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
                 return null;    
             }
 
-            var content = await response.Content.ReadAsStringAsync();
-
-            return JsonSerializer.Deserialize<UserDto>(content, new JsonSerializerOptions
-                {
-                PropertyNameCaseInsensitive = true
-                 });
-                
+            return await response.Content.ReadFromJsonAsync<PublicUserDto>();
+    
         }
     }
 }

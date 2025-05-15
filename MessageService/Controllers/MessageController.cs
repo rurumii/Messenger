@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MessageService.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace MessageService.Controllers
 {
@@ -32,8 +33,10 @@ namespace MessageService.Controllers
                 return BadRequest(new { message = "Message content cannot be empty" });
             }
 
-            var sender = await _userService.GetUserByIdAsync(message.SenderId);
-            var receiver = await _userService.GetUserByIdAsync(message.ReceiverId);
+            string token = Request.Headers.Authorization.ToString().Replace("Bearer", "");
+
+            var sender = await _userService.GetUserByIdAsync(message.SenderId, token);
+            var receiver = await _userService.GetUserByIdAsync(message.ReceiverId, token);
 
             if (sender == null || receiver == null)
             {
@@ -61,10 +64,20 @@ namespace MessageService.Controllers
                 .OrderBy(m => m.Timestamp)
                 .ToListAsync();
 
-            return Ok(messages);
-        }
+            var messagesDtos = new List<MessageDTO>();
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer", "");
+            foreach (var msg in messages)
+            {
+                var sender = await _userService.GetUserByIdAsync(msg.SenderId, token);
+                var dto = _mapper.Map<MessageDTO>(msg);
+                dto.SenderName = sender?.Username ?? $"User {msg.SenderId}";
+                messagesDtos.Add(dto);
+            }
 
-        [HttpDelete("{id}")]
+            return Ok(messagesDtos);
+        }
+        [Authorize]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteMessage (int id)
         {
             var message = await _context.Messages.FindAsync(id);
@@ -79,13 +92,33 @@ namespace MessageService.Controllers
 
             return Ok(new { message = "Message deleted" });
         }
-
-        [HttpGet("test-user/{id}")]
-        public async Task<IActionResult> TestUser (int id)
+        [Authorize]
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateMessage(int id, [FromBody] UpdateMessageDto dto)
         {
-            var user = await _userService.GetUserByIdAsync(id);
-            return user == null ? NotFound("User not found") : Ok(user);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // получаем айди текущего юзера
+
+            var message = await _context.Messages.FindAsync(id);
+
+            if (message == null)
+            {
+                return NotFound(new { message = "Message not found" });
+            }
+
+            if (message.SenderId.ToString() != userId)
+            {
+                return Forbid(); // нельзя редактировать чужие соо
+            }
+
+            message.Content = dto.Content;
+            message.EditedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Message updated" });
         }
+
+        
         
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace UserService.Models
+﻿namespace MessageService.Models
 {
     public class PublicUserDto
     {

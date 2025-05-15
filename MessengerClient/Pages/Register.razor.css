@@ -1,11 +1,4 @@
-﻿body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    color: #f0f0f0;
-    background-color: #0f1115;
-}
-
-.register-screen {
+﻿.register-screen {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,9 +30,12 @@
         opacity: 1;
     }
 
-h2 {
+.welcome-title {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #ddd;
+    text-align: center;
     margin-bottom: 2rem;
-    color: #ffffff;
 }
 
 .form-label {
@@ -90,36 +86,18 @@ h2 {
         background-color: #5b5b5b;
     }
 
-.alert-danger {
-    color: #f88;
-    background: #2e1d1d;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
-    border-radius: 6px;
-    width: 100%;
+.text-center {
     text-align: center;
+    font-size: 0.95rem;
+    color: #ccc;
+    margin-top: 1rem;
 }
 
-.welcome-title {
-    font-size: 1.8rem;
-    font-weight: 500;
-    color: #ddd;
-    text-align: center;
-    margin-bottom: 2rem;
-}
+    .text-center a {
+        color: #a0b3ff;
+        text-decoration: none;
+    }
 
-.validation-errors {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    min-height: 1.5em;
-    color: #ff4c4c;
-    font-size: 0.9rem;
-}
-
-.validation-message {
-    margin: 0;
-    padding: 0;
-    font-size: 0.9rem;
-    color: #ff4c4c;
-}
+        .text-center a:hover {
+            text-decoration: underline;
+        }

@@ -101,3 +101,41 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+.custom-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #0f1115;
+    overflow: hidden; 
+}
+
+    .custom-loader img {
+        width: 120px;
+        height: 120px;
+        max-width: 120px;
+        max-height: 120px;
+        object-fit: contain;
+        display: block;
+        image-rendering: auto;
+        border-radius: 50%;
+        animation: pulse 1.8s infinite ease-in-out;
+    }
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 0.85;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+

@@ -26,5 +26,20 @@ namespace MessengerClient.Services
             }
             return null;
         }
+        public async Task<FoundUserDTO?> GetUserByQueryAsync(string query)
+        {
+            try
+            {
+                return await _http.GetFromJsonAsync<FoundUserDTO>($"https://localhost:7202/api/users/find/by-query/{query}");
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public async Task<FoundUserDTO?> GetUserByIdAsync(int id)
+        {
+            return await _http.GetFromJsonAsync<FoundUserDTO>($"https://localhost:7202/api/users/find/by-id/{id}");
+        }
     }
 }
