@@ -14,9 +14,19 @@ namespace MessageService.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Chat: один уникальный чат между двумя пользователями
             modelBuilder.Entity<Chat>()
                 .HasIndex(c => new { c.User1Id, c.User2Id })
                 .IsUnique();
+
+            // Message → Chat (один чат содержит много сообщений)
+            modelBuilder.Entity<Message>()
+                .HasOne<Chat>()
+                .WithMany()
+                .HasForeignKey(m => m.ChatId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            
         }
     }
 }
