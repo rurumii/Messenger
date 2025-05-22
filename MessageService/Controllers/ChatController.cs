@@ -4,6 +4,8 @@ using MessageService.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MessageService.Mapping;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace MessageService.Controllers
 {
@@ -13,16 +15,24 @@ namespace MessageService.Controllers
     {
         private readonly MessageDbContext _context;
         private readonly IMapper _mapper;
-
+        
         public ChatController (MessageDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
+        [Authorize]
         [HttpPost("create")]    
         public async Task<IActionResult> CreateChat([FromBody] CreateChatDTO chat)
         {
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            if (chat.User1Id != currentUserId && chat.User2Id != currentUserId)
+            {
+                return Forbid();
+            }
+
             if (chat.User1Id == chat.User2Id)
             {
                 return BadRequest(new { message = "User cannot chat with themselves" });
@@ -50,9 +60,16 @@ namespace MessageService.Controllers
 
         }
 
+        [Authorize]
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetChatByUserId (int userId)
         {
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (userId != currentUserId)
+            {
+                return Forbid();
+            }
+
             var chats = await _context.Chats
                 .Where(c=> c.User1Id == userId || c.User2Id == userId)
                 .ToListAsync();
@@ -63,9 +80,13 @@ namespace MessageService.Controllers
             }
             return Ok(chats);
         }
+
+        [Authorize]
         [HttpGet("{chatId}")]
         public async Task<IActionResult> GetChatById (int chatId)
         {
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
             var chat = await _context.Chats.FirstOrDefaultAsync(c=>c.Id == chatId);
 
             if (chat == null)
@@ -73,11 +94,20 @@ namespace MessageService.Controllers
                 return NotFound(new { message = "Chat not found" });
             }
 
+            if (chat.User1Id != currentUserId && chat.User2Id != currentUserId)
+            {
+                return Forbid();
+            }
+
             return Ok(chat);
         }
+
+        [Authorize]
         [HttpDelete("{chatId}")]
         public async Task<IActionResult> DeleteChat (int chatId)
         {
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
             var chat = await _context.Chats.FirstOrDefaultAsync( c => c.Id == chatId);
 
             if (chat == null)
@@ -85,19 +115,37 @@ namespace MessageService.Controllers
                 return NotFound(new { message = "Chat not found" });
             }
 
+            if (chat.User1Id != currentUserId && chat.User2Id != currentUserId)
+            {
+                return Forbid();
+            }
+
             _context.Chats.Remove(chat);
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Chat deleted successfully" });
         }
+        [Authorize]
         [HttpPut("{chatId}")]
         public async Task<IActionResult> UpdateChatName (int chatId, [FromBody] UpdateChatNameDTO dto)
         {
-            var chat = await _context.Chats.FirstOrDefaultAsync (c => c.Id == chatId);
+            if (string.IsNullOrWhiteSpace(dto.Name))
+            {
+                return BadRequest(new { message = "Chat name cannot be empty" });
+            }
 
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var chat = await _context.Chats.FirstOrDefaultAsync (c => c.Id == chatId);
+            
             if (chat == null)
             {
                 return NotFound(new { message = "Chat not found" });
+            }
+
+            if (chat.User1Id != currentUserId && chat.User2Id != currentUserId)
+            {
+                return Forbid();
             }
 
             _mapper.Map(dto, chat);

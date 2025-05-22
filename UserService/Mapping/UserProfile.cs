@@ -8,7 +8,9 @@ namespace UserService.Mapping
         public UserProfile()
         {
             CreateMap<RegistrationDTO, User>();
-            CreateMap<UpdateUserDTO, User>();
+            CreateMap<UpdateUserDTO, User>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
             CreateMap<User, PublicUserDto>();
             //CreateMap<User, object>()
             //    .ForMember(dest => dest, opt => opt.MapFrom(src => new

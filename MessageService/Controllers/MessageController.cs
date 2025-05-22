@@ -56,6 +56,7 @@ namespace MessageService.Controllers
             });
         }
 
+        [Authorize]
         [HttpGet("chat/{chatId}")]
         public async Task<IActionResult> GetMessagesByChat(int chatId)
         {
@@ -63,7 +64,7 @@ namespace MessageService.Controllers
                 .Where(m => m.ChatId == chatId)
                 .OrderBy(m => m.Timestamp)
                 .ToListAsync();
-
+            
             var messagesDtos = new List<MessageDTO>();
             var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer", "");
             foreach (var msg in messages)
@@ -87,6 +88,13 @@ namespace MessageService.Controllers
                 return NotFound(new { message = "Message not found" });
             }
 
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            if (message.SenderId != currentUserId)
+            {
+                return Forbid();
+            }
+
             _context.Messages.Remove(message);
             await _context.SaveChangesAsync();
 
@@ -96,8 +104,10 @@ namespace MessageService.Controllers
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateMessage(int id, [FromBody] UpdateMessageDto dto)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // получаем айди текущего юзера
-
+            if (string.IsNullOrWhiteSpace(dto.Content))
+            {
+                return BadRequest(new {message = "Message content cannot be empty"});
+            }
             var message = await _context.Messages.FindAsync(id);
 
             if (message == null)
@@ -105,9 +115,11 @@ namespace MessageService.Controllers
                 return NotFound(new { message = "Message not found" });
             }
 
-            if (message.SenderId.ToString() != userId)
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            if (message.SenderId != currentUserId)
             {
-                return Forbid(); // нельзя редактировать чужие соо
+                return Forbid();
             }
 
             message.Content = dto.Content;

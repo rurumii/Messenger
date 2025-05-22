@@ -8,7 +8,6 @@ namespace UserService.Models
         public string UserTag { get; set; }
         [EmailAddress]
         public string Email { get; set; }
-        public string PasswordHash { get; set; }
         public string Bio { get; set; }
         public string ProfileImageUrl { get; set; }
     }

@@ -6,6 +6,7 @@ using AutoMapper;
 using UserService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace UserService.Controllers
 {
@@ -79,9 +80,16 @@ namespace UserService.Controllers
             return Ok(userDto);
         }
 
-        [HttpDelete("{id}")]
+        [Authorize]
+        [HttpDelete("deleteuser/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
-        {
+        { 
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (currentUserId != id)
+            {
+                return Forbid();
+            }
+
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
@@ -142,6 +150,12 @@ namespace UserService.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDTO updatedUser)
         {
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (currentUserId != id)
+            {
+                return Forbid();
+            }
+
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
@@ -152,7 +166,7 @@ namespace UserService.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "User updated succesfully" });
+            return Ok(new { message = "User updated successfully" });
         }
 
         [HttpGet("find/by-query/{query}")]
@@ -215,7 +229,7 @@ namespace UserService.Controllers
 
             if (friendship == null)
             {
-                return NotFound(new { message = "Frienship not found" });
+                return NotFound(new { message = "Friendship not found" });
             }
 
             _context.Friends.Remove(friendship);
