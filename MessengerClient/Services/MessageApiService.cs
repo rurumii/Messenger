@@ -19,16 +19,60 @@ namespace MessengerClient.Services
 
         public async Task<List<ChatDTO>> GetUserChatsAsync(int userId)
         {
-            return await _http.GetFromJsonAsync<List<ChatDTO>>($"https://localhost:7130/api/chats/user/{userId}");
+            var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return null;
+            }
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"https://localhost:7130/api/chats/user/{userId}");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _http.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            return await response.Content.ReadFromJsonAsync<List<ChatDTO>>();
+
         }
         public async Task<bool> CreateChatAsync(CreateChatDTO create)
         {
-            var response = await _http.PostAsJsonAsync("https://localhost:7130/api/chats/create", create);
+            var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return false;
+            }
+
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://localhost:7130/api/chats/create")
+            {
+                Content = JsonContent.Create(create)
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _http.SendAsync(request);
             return response.IsSuccessStatusCode;
+
         }
         public async Task<List<MessageDTO>> GetMessagesByChatAsync(int chatId)
         {
-            return await _http.GetFromJsonAsync<List<MessageDTO>>($"https://localhost:7130/api/messages/chat/{chatId}");
+            var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return null;
+            }
+
+            var request = new HttpRequestMessage(HttpMethod.Get, $"https://localhost:7130/api/messages/chat/{chatId}");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _http.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+            return await response.Content.ReadFromJsonAsync<List<MessageDTO>>();
+                
         }
         public async Task<bool> SendMessageAsync(SendMessageDTO message)
         {
