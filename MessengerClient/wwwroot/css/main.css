@@ -1,517 +1,517 @@
 ﻿/* === Общий Layout === */
 /*.layout {
-    display: flex;
-    height: 100vh;
-    background-color: #0f1115;
-    color: #f0f0f0;
-    font-family: 'Segoe UI', sans-serif;
+display: flex;
+height: 100vh;
+background-color: #0f1115;
+color: #f0f0f0;
+font-family: 'Segoe UI', sans-serif;
 }*/
 
 /* === Sidebar === */
 /*.sidebar {
-    width: 300px;
-    background-color: #1a1c20;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 1rem;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+width: 300px;
+background-color: #1a1c20;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+padding: 1rem;
+box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar-top {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
+margin-bottom: 1rem;
 }
 
 .sidebar-btn {
-    background-color: #27292e;
-    color: #ccc;
-    padding: 0.6rem 1rem;
-    border: none;
-    border-radius: 6px;
-    text-align: left;
-    cursor: pointer;
-    transition: background 0.2s;
+background-color: #27292e;
+color: #ccc;
+padding: 0.6rem 1rem;
+border: none;
+border-radius: 6px;
+text-align: left;
+cursor: pointer;
+transition: background 0.2s;
 }
 
-    .sidebar-btn:hover {
-        background-color: #333;
-    }*/
+.sidebar-btn:hover {
+background-color: #333;
+}*/
 
 /* === Чаты === */
 /*.chat-list {
-    flex-grow: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+flex-grow: 1;
+overflow-y: auto;
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
 }
 
 .chat-item {
-    padding: 0.75rem 1rem;
-    background-color: #1d1f23;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s;
+padding: 0.75rem 1rem;
+background-color: #1d1f23;
+border-radius: 8px;
+cursor: pointer;
+transition: background 0.2s;
 }
 
-    .chat-item:hover {
-        background-color: #2a2c31;
-    }
+.chat-item:hover {
+background-color: #2a2c31;
+}
 
-    .chat-item.selected {
-        background-color: #3a3d45;
-        font-weight: bold;
-    }*/
+.chat-item.selected {
+background-color: #3a3d45;
+font-weight: bold;
+}*/
 
 /* === Поиск и создание чата === */
 /*.new-chat-block {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
+margin-bottom: 1rem;
 }
 
 .chat-actions {
-    display: flex;
-    gap: 0.5rem;
+display: flex;
+gap: 0.5rem;
 }
 
 input.form-control {
-    background-color: #1b1d22;
-    color: #eee;
-    border: 1px solid #444;
-    padding: 0.6rem 1rem;
-    border-radius: 6px;
-    width: 100%;
+background-color: #1b1d22;
+color: #eee;
+border: 1px solid #444;
+padding: 0.6rem 1rem;
+border-radius: 6px;
+width: 100%;
 }
 
-    input.form-control:focus {
-        background-color: #22252b;
-        border-color: #888;
-        outline: none;
-    }*/
+input.form-control:focus {
+background-color: #22252b;
+border-color: #888;
+outline: none;
+}*/
 
 /* === Найденный пользователь === */
 /*.found-user-preview {
-    background-color: #2c2f34;
-    padding: 1rem;
-    border-radius: 10px;
-    margin-top: 1rem;
-    color: #ccc;
-    font-size: 0.95rem;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+background-color: #2c2f34;
+padding: 1rem;
+border-radius: 10px;
+margin-top: 1rem;
+color: #ccc;
+font-size: 0.95rem;
+box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-    .found-user-preview strong {
-        font-size: 1.1rem;
-        color: #fff;
-    }*/
+.found-user-preview strong {
+font-size: 1.1rem;
+color: #fff;
+}*/
 
 /* === Нижняя панель с юзером === */
 /*.sidebar-bottom {
-    border-top: 1px solid #333;
-    padding-top: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+border-top: 1px solid #333;
+padding-top: 1rem;
+display: flex;
+align-items: center;
+gap: 0.75rem;
 }
 
 .user-info {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    width: 100%;
-    padding: 0.5rem 1rem;
-    color: #ddd;
+display: flex;
+align-items: center;
+gap: 0.75rem;
+width: 100%;
+padding: 0.5rem 1rem;
+color: #ddd;
 }
 
-    .user-info .avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
+.user-info .avatar {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+object-fit: cover;
+}
 
 .edit-profile {
-    background: none;
-    border: none;
-    color: #aaa;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-left: auto;
+background: none;
+border: none;
+color: #aaa;
+cursor: pointer;
+font-size: 1rem;
+margin-left: auto;
 }
 
-    .edit-profile:hover {
-        color: #fff;
-    }*/
+.edit-profile:hover {
+color: #fff;
+}*/
 
 /* === Контент чата === */
 /*.message-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 16px;
-    max-height: 70vh;
-    overflow-y: auto;
+display: flex;
+flex-direction: column;
+gap: 10px;
+padding: 16px;
+max-height: 70vh;
+overflow-y: auto;
 }
 
 .message-container {
-    display: flex;
-    flex-direction: column;
-    max-width: 60%;
-    margin-bottom: 8px;
+display: flex;
+flex-direction: column;
+max-width: 60%;
+margin-bottom: 8px;
 }
 
-    .message-container.mine {
-        align-self: flex-end;
-        text-align: right;
-    }
+.message-container.mine {
+align-self: flex-end;
+text-align: right;
+}
 
-    .message-container.theirs {
-        align-self: flex-start;
-        text-align: left;
-    }
+.message-container.theirs {
+align-self: flex-start;
+text-align: left;
+}
 
 .message-bubble {
-    background-color: #2f3136;
-    padding: 12px 16px;
-    border-radius: 16px;
-    border-bottom-left-radius: 0;
-    color: #e4e6eb;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    position: relative;
-    animation: fadeIn 0.25s ease-in-out;
+background-color: #2f3136;
+padding: 12px 16px;
+border-radius: 16px;
+border-bottom-left-radius: 0;
+color: #e4e6eb;
+box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+position: relative;
+animation: fadeIn 0.25s ease-in-out;
 }
 
 .message-container.mine .message-bubble {
-    background-color: #5865f2;
-    color: white;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 16px;
+background-color: #5865f2;
+color: white;
+border-bottom-right-radius: 0;
+border-bottom-left-radius: 16px;
 }
 
 .sender {
-    font-size: 0.75rem;
-    color: #a1a1a1;
-    margin-bottom: 4px;
-    font-weight: 500;
-    display: block;
+font-size: 0.75rem;
+color: #a1a1a1;
+margin-bottom: 4px;
+font-weight: 500;
+display: block;
 }
 
 .text {
-    font-size: 1rem;
-    white-space: pre-wrap;
+font-size: 1rem;
+white-space: pre-wrap;
 }
 
 .send-message-box {
-    display: flex;
-    gap: 10px;
-    padding: 16px;
-    border-top: 1px solid #444;
-    background-color: #1e1f22;
+display: flex;
+gap: 10px;
+padding: 16px;
+border-top: 1px solid #444;
+background-color: #1e1f22;
 }
 
-    .send-message-box input {
-        flex: 1;
-        padding: 10px;
-        background-color: #2b2d31;
-        border: none;
-        border-radius: 8px;
-        color: white;
-        font-size: 1rem;
-    }
+.send-message-box input {
+flex: 1;
+padding: 10px;
+background-color: #2b2d31;
+border: none;
+border-radius: 8px;
+color: white;
+font-size: 1rem;
+}
 
 .send-btn {
-    padding: 10px 16px;
-    background-color: #5865f2;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+padding: 10px 16px;
+background-color: #5865f2;
+border: none;
+border-radius: 8px;
+color: white;
+font-weight: bold;
+cursor: pointer;
+transition: background-color 0.2s ease;
 }
 
-    .send-btn:hover {
-        background-color: #4752c4;
-    }*/
+.send-btn:hover {
+background-color: #4752c4;
+}*/
 
 /* Optional: fade-in animation */
 /*@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
+from {
+opacity: 0;
+transform: translateY(4px);
+}
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+to {
+opacity: 1;
+transform: translateY(0);
+}
 }*/
 /* === Общий Layout === */
 .layout {
-    display: flex;
-    height: 100vh;
-    background-color: #0f1115;
-    color: #f0f0f0;
-    font-family: 'Segoe UI', sans-serif;
+display: flex;
+height: 100vh;
+background-color: #0f1115;
+color: #f0f0f0;
+font-family: 'Segoe UI', sans-serif;
 }
 
 /* === Sidebar === */
 .sidebar {
-    width: 300px;
-    background-color: #1a1c20;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 1rem;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+width: 300px;
+background-color: #1a1c20;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+padding: 1rem;
+box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar-top {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
+margin-bottom: 1rem;
 }
 
 .sidebar-btn {
-    background-color: #27292e;
-    color: #ccc;
-    padding: 0.6rem 1rem;
-    border: none;
-    border-radius: 6px;
-    text-align: left;
-    cursor: pointer;
-    transition: background 0.2s;
+background-color: #27292e;
+color: #ccc;
+padding: 0.6rem 1rem;
+border: none;
+border-radius: 6px;
+text-align: left;
+cursor: pointer;
+transition: background 0.2s;
 }
 
-    .sidebar-btn:hover {
-        background-color: #333;
-    }
+.sidebar-btn:hover {
+background-color: #333;
+}
 
 /* === Поиск и создание чата === */
 .new-chat-block {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
+margin-bottom: 1rem;
 }
 
 .chat-actions {
-    display: flex;
-    gap: 0.5rem;
+display: flex;
+gap: 0.5rem;
 }
 
 input.form-control {
-    background-color: #1b1d22;
-    color: #eee;
-    border: 1px solid #444;
-    padding: 0.6rem 1rem;
-    border-radius: 6px;
-    width: 100%;
+background-color: #1b1d22;
+color: #eee;
+border: 1px solid #444;
+padding: 0.6rem 1rem;
+border-radius: 6px;
+width: 100%;
 }
 
-    input.form-control:focus {
-        background-color: #22252b;
-        border-color: #888;
-        outline: none;
-    }
+input.form-control:focus {
+background-color: #22252b;
+border-color: #888;
+outline: none;
+}
 
 /* === Найденный пользователь === */
 .found-user-preview {
-    background-color: #2c2f34;
-    padding: 1rem;
-    border-radius: 10px;
-    margin-top: 1rem;
-    color: #ccc;
-    font-size: 0.95rem;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+background-color: #2c2f34;
+padding: 1rem;
+border-radius: 10px;
+margin-top: 1rem;
+color: #ccc;
+font-size: 0.95rem;
+box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-    .found-user-preview strong {
-        font-size: 1.1rem;
-        color: #fff;
-    }
+.found-user-preview strong {
+font-size: 1.1rem;
+color: #fff;
+}
 
 /* === Список чатов === */
 .chat-list {
-    flex-grow: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+flex-grow: 1;
+overflow-y: auto;
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
 }
 
 .chat-item {
-    padding: 0.75rem 1rem;
-    background-color: #1d1f23;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s;
+padding: 0.75rem 1rem;
+background-color: #1d1f23;
+border-radius: 8px;
+cursor: pointer;
+transition: background 0.2s;
 }
 
-    .chat-item:hover {
-        background-color: #2a2c31;
-    }
+.chat-item:hover {
+background-color: #2a2c31;
+}
 
-    .chat-item.selected {
-        background-color: #3a3d45;
-        font-weight: bold;
-    }
+.chat-item.selected {
+background-color: #3a3d45;
+font-weight: bold;
+}
 
 /* === Нижняя панель с пользователем === */
 .sidebar-bottom {
-    border-top: 1px solid #333;
-    padding-top: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+border-top: 1px solid #333;
+padding-top: 1rem;
+display: flex;
+align-items: center;
+gap: 0.75rem;
 }
 
 .user-info {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    width: 100%;
-    padding: 0.5rem 1rem;
-    color: #ddd;
+display: flex;
+align-items: center;
+gap: 0.75rem;
+width: 100%;
+padding: 0.5rem 1rem;
+color: #ddd;
 }
 
-    .user-info .avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
+.user-info .avatar {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+object-fit: cover;
+}
 
 .edit-profile {
-    background: none;
-    border: none;
-    color: #aaa;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-left: auto;
+background: none;
+border: none;
+color: #aaa;
+cursor: pointer;
+font-size: 1rem;
+margin-left: auto;
 }
 
-    .edit-profile:hover {
-        color: #fff;
-    }
+.edit-profile:hover {
+color: #fff;
+}
 
 /* === Контент чата === */
 .chat-content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    overflow-y: hidden;
+flex-grow: 1;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+padding: 1rem 2rem;
+overflow-y: hidden;
 }
 
 /* === Сообщения === */
 .message-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 16px;
-    max-height: 70vh;
-    overflow-y: auto;
+display: flex;
+flex-direction: column;
+gap: 10px;
+padding: 16px;
+max-height: 70vh;
+overflow-y: auto;
 }
 
 .message-container {
-    display: flex;
-    flex-direction: column;
-    max-width: 60%;
-    margin-bottom: 8px;
+display: flex;
+flex-direction: column;
+max-width: 60%;
+margin-bottom: 8px;
 }
 
-    .message-container.mine {
-        align-self: flex-end;
-        text-align: right;
-    }
+.message-container.mine {
+align-self: flex-end;
+text-align: right;
+}
 
-    .message-container.theirs {
-        align-self: flex-start;
-        text-align: left;
-    }
+.message-container.theirs {
+align-self: flex-start;
+text-align: left;
+}
 
 .message-bubble {
-    background-color: #2f3136;
-    padding: 12px 16px;
-    border-radius: 16px;
-    border-bottom-left-radius: 0;
-    color: #e4e6eb;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    position: relative;
-    animation: fadeIn 0.25s ease-in-out;
+background-color: #2f3136;
+padding: 12px 16px;
+border-radius: 16px;
+border-bottom-left-radius: 0;
+color: #e4e6eb;
+box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+position: relative;
+animation: fadeIn 0.25s ease-in-out;
 }
 
 .message-container.mine .message-bubble {
-    background-color: #5865f2;
-    color: white;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 16px;
+background-color: #5865f2;
+color: white;
+border-bottom-right-radius: 0;
+border-bottom-left-radius: 16px;
 }
 
 .sender {
-    font-size: 0.75rem;
-    color: #a1a1a1;
-    margin-bottom: 4px;
-    font-weight: 500;
-    display: block;
+font-size: 0.75rem;
+color: #a1a1a1;
+margin-bottom: 4px;
+font-weight: 500;
+display: block;
 }
 
 .text {
-    font-size: 1rem;
-    white-space: pre-wrap;
+font-size: 1rem;
+white-space: pre-wrap;
 }
 
 /* === Отправка сообщений === */
 .send-message-box {
-    display: flex;
-    gap: 10px;
-    padding: 16px;
-    border-top: 1px solid #444;
-    background-color: #1e1f22;
+display: flex;
+gap: 10px;
+padding: 16px;
+border-top: 1px solid #444;
+background-color: #1e1f22;
 }
 
-    .send-message-box input {
-        flex: 1;
-        padding: 10px;
-        background-color: #2b2d31;
-        border: none;
-        border-radius: 8px;
-        color: white;
-        font-size: 1rem;
-    }
+.send-message-box input {
+flex: 1;
+padding: 10px;
+background-color: #2b2d31;
+border: none;
+border-radius: 8px;
+color: white;
+font-size: 1rem;
+}
 
 .send-btn {
-    padding: 10px 16px;
-    background-color: #5865f2;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+padding: 10px 16px;
+background-color: #5865f2;
+border: none;
+border-radius: 8px;
+color: white;
+font-weight: bold;
+cursor: pointer;
+transition: background-color 0.2s ease;
 }
 
-    .send-btn:hover {
-        background-color: #4752c4;
-    }
+.send-btn:hover {
+background-color: #4752c4;
+}
 
 /* === Анимации === */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
+from {
+opacity: 0;
+transform: translateY(4px);
+}
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+to {
+opacity: 1;
+transform: translateY(0);
+}
 }

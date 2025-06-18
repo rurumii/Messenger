@@ -15,8 +15,6 @@ namespace MessengerClient.Services
             _jsRuntime = jSRuntime;
         }
 
-        // https://localhost:7130/
-
         public async Task<List<ChatDTO>> GetUserChatsAsync(int userId)
         {
             var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");

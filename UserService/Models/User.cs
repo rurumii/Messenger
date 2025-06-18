@@ -11,7 +11,7 @@ namespace UserService.Models
         public string Username { get; set; }
 
         [Display(Description = "Optional username tag shown in chats")]
-        public string? UserTag { get; set; } // unique
+        public string? UserTag { get; set; } 
 
         [Required]
         [EmailAddress]

@@ -11,7 +11,7 @@
 
 
 <div class="layout">
-    <!-- Sidebar with top links + chats + user profile -->
+    <!-- sidebar with top links + chats + user profile -->
     <div class="sidebar">
         <div class="sidebar-top">
             <button class="sidebar-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
@@ -27,7 +27,6 @@
 
         <div class="chat-list">
             <div class="new-chat-block">
-                @* // bind — это двусторонняя привязка данных между HTML-элементом и C# переменной *@
                 <input @bind="searchTag" placeholder="User Tag.." class="form-control" />
                 <div class="chat-actions">
                     <button @onclick="SearchUser">
@@ -116,7 +115,7 @@
 
     </div>
 
-    <!-- Chat content -->
+    <!-- chat content -->
     @{
         var selectedChat = GetSelectedChat();
     }
@@ -124,7 +123,7 @@
         @if (selectedChatId == null)
         {
             <div class="welcome-message">
-                <h2>Welcome</h2>
+                <h2>Welcome back 🐾</h2>
                 <p>Select a chat to start messaging</p>
                 <i class="bi bi-chat-dots"></i>
             </div>

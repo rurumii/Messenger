@@ -3,7 +3,6 @@ using Microsoft.JSInterop;
 
 namespace MessengerClient.Services
 {
-    // обработчик запросов (middleware для HttpClient), перехватывает каждый исходящий запрос и может его изменять
     public class AuthorizedHandler : DelegatingHandler
     {
         private readonly JSRuntime _jsRuntime;

@@ -5,7 +5,6 @@ using System.Text.Json;
 
 namespace MessengerClient.Services
 {
-    // сообщает Blazor-у авторизован ли пользователь
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
         private readonly IJSRuntime _jsRuntime;
@@ -15,19 +14,16 @@ namespace MessengerClient.Services
             _jsRuntime = jsRuntime;
         }
 
-        //  Blazor вызывает этот метод, чтобы спросить кто сейчас залогинен
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
 
-            //  если токена нет возвращаем анонимного пользователя (не авторизован)
             if (string.IsNullOrEmpty(token)) 
             {
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
 
 
-            // оборачиваем в ClaimsPrincipal
             var identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
             var user = new ClaimsPrincipal(identity);
             return new AuthenticationState(user);

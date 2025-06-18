@@ -12,12 +12,12 @@
     <div class="login-content">
         <img src="img/logo_final.svg" alt="Logo" class="logo">
 
-        <h2 class="welcome-title">Welcome!</h2>
+        <h2 class="welcome-title">Welcome to Meowly 🐾</h2>
 
         @if (!string.IsNullOrEmpty(errorMessage))
         {
             <div class="alert alert-danger">@errorMessage</div>
-        }  
+        }
 
         <EditForm Model="loginModel" OnValidSubmit="@HandleLogin">
             <DataAnnotationsValidator />
@@ -41,11 +41,11 @@
 
         </EditForm>
 
-    </div>  
+    </div>
 </div>
 
 
-@code{
+@code {
     private LoginDTO loginModel = new();
     private string errorMessage = "";
 
@@ -54,7 +54,6 @@
         var result = await UserService.LoginAsync(loginModel);
         if (result is not null)
         {
-            // сохраняем токен
             await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", result.Token);
             //
             if (AuthProvider is CustomAuthStateProvider customAuth)
@@ -62,7 +61,7 @@
                 await customAuth.NotifyUserAuthentication(result.Token);
             }
             Console.WriteLine("TOKEN: " + result.Token);
-            Navigation.NavigateTo("/main", true); // редирект на главную
+            Navigation.NavigateTo("/main", true);
         }
         else
         {
