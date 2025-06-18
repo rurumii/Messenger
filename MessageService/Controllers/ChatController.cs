@@ -15,15 +15,15 @@ namespace MessageService.Controllers
     {
         private readonly MessageDbContext _context;
         private readonly IMapper _mapper;
-        
-        public ChatController (MessageDbContext context, IMapper mapper)
+
+        public ChatController(MessageDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
         [Authorize]
-        [HttpPost("create")]    
+        [HttpPost("create")]
         public async Task<IActionResult> CreateChat([FromBody] CreateChatDTO chat)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -52,8 +52,8 @@ namespace MessageService.Controllers
             await _context.Chats.AddAsync(newchat);
             await _context.SaveChangesAsync();
 
-            return Ok(new 
-            { 
+            return Ok(new
+            {
                 message = "Chat created successfully",
                 chatId = newchat.Id
             });
@@ -62,7 +62,7 @@ namespace MessageService.Controllers
 
         [Authorize]
         [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetChatByUserId (int userId)
+        public async Task<IActionResult> GetChatByUserId(int userId)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             if (userId != currentUserId)
@@ -71,7 +71,7 @@ namespace MessageService.Controllers
             }
 
             var chats = await _context.Chats
-                .Where(c=> c.User1Id == userId || c.User2Id == userId)
+                .Where(c => c.User1Id == userId || c.User2Id == userId)
                 .ToListAsync();
 
             if (chats == null || chats.Count == 0)
@@ -83,11 +83,11 @@ namespace MessageService.Controllers
 
         [Authorize]
         [HttpGet("{chatId}")]
-        public async Task<IActionResult> GetChatById (int chatId)
+        public async Task<IActionResult> GetChatById(int chatId)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-            var chat = await _context.Chats.FirstOrDefaultAsync(c=>c.Id == chatId);
+            var chat = await _context.Chats.FirstOrDefaultAsync(c => c.Id == chatId);
 
             if (chat == null)
             {
@@ -104,11 +104,11 @@ namespace MessageService.Controllers
 
         [Authorize]
         [HttpDelete("{chatId}")]
-        public async Task<IActionResult> DeleteChat (int chatId)
+        public async Task<IActionResult> DeleteChat(int chatId)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-            var chat = await _context.Chats.FirstOrDefaultAsync( c => c.Id == chatId);
+            var chat = await _context.Chats.FirstOrDefaultAsync(c => c.Id == chatId);
 
             if (chat == null)
             {
@@ -127,7 +127,7 @@ namespace MessageService.Controllers
         }
         [Authorize]
         [HttpPut("{chatId}")]
-        public async Task<IActionResult> UpdateChatName (int chatId, [FromBody] UpdateChatNameDTO dto)
+        public async Task<IActionResult> UpdateChatName(int chatId, [FromBody] UpdateChatNameDTO dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Name))
             {
@@ -136,8 +136,8 @@ namespace MessageService.Controllers
 
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-            var chat = await _context.Chats.FirstOrDefaultAsync (c => c.Id == chatId);
-            
+            var chat = await _context.Chats.FirstOrDefaultAsync(c => c.Id == chatId);
+
             if (chat == null)
             {
                 return NotFound(new { message = "Chat not found" });
@@ -152,7 +152,7 @@ namespace MessageService.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(new {message = "Chat name updated successfully", chatId=chat.Id, newName=chat.Name});
+            return Ok(new { message = "Chat name updated successfully", chatId = chat.Id, newName = chat.Name });
         }
     }
 }

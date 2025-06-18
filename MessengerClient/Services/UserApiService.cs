@@ -12,7 +12,7 @@ namespace MessengerClient.Services
             _http = http;
         }
 
-        public async Task<bool> RegisterAsync(RegistrationDTO registration) 
+        public async Task<bool> RegisterAsync(RegistrationDTO registration)
         {
             var response = await _http.PostAsJsonAsync("https://localhost:7202/api/users/register", registration);
             return response.IsSuccessStatusCode;

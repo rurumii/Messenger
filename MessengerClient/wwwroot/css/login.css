@@ -35,10 +35,10 @@
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.logo:hover {
-    transform: scale(1.05);
-    opacity: 1;
-}
+    .logo:hover {
+        transform: scale(1.05);
+        opacity: 1;
+    }
 
 h2 {
     margin-bottom: 2rem;
@@ -65,18 +65,18 @@ h2 {
     min-height: 2.8rem;
 }
 
-.form-control::placeholder {
-    color: #888 !important;
-    opacity: 1 !important;
-}
+    .form-control::placeholder {
+        color: #888 !important;
+        opacity: 1 !important;
+    }
 
-.form-control:focus {
-    outline: none;
-    background-color: #1e2025;
-    color: #f0f0f0; 
-    border: 1px solid #5c6b7a;
-    box-shadow: 0 0 6px 2px rgba(90, 110, 130, 0.25);
-}
+    .form-control:focus {
+        outline: none;
+        background-color: #1e2025;
+        color: #f0f0f0;
+        border: 1px solid #5c6b7a;
+        box-shadow: 0 0 6px 2px rgba(90, 110, 130, 0.25);
+    }
 
 
 .btn-primary {
@@ -90,9 +90,9 @@ h2 {
     transition: background 0.3s;
 }
 
-.btn-primary:hover {
-    background-color: #5b5b5b;
-}
+    .btn-primary:hover {
+        background-color: #5b5b5b;
+    }
 
 .alert-danger {
     color: #f88;
@@ -116,16 +116,18 @@ h2 {
     list-style: none;
     margin: 0;
     padding: 0;
-    min-height: 1.5em; 
+    min-height: 1.5em;
     color: #ff4c4c;
     font-size: 0.9rem;
 }
+
 .validation-message {
     margin: 0;
     padding: 0;
     font-size: 0.9rem;
     color: #ff4c4c;
 }
+
 .text-center {
     text-align: center;
     font-size: 0.95rem;
@@ -133,7 +135,7 @@ h2 {
     margin-top: 1rem;
 }
 
-.text-center a {
-    color: #a0b3ff;
-    text-decoration: none;
-}
+    .text-center a {
+        color: #a0b3ff;
+        text-decoration: none;
+    }

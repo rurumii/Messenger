@@ -22,7 +22,7 @@ namespace MessengerClient
             {
                 client.BaseAddress = new Uri("https://localhost:7130/");
             });
-            
+
 
             builder.Services.AddScoped<UserApiService>();
             builder.Services.AddScoped<MessageApiService>();

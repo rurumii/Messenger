@@ -16,13 +16,13 @@ namespace MessageService.Controllers
         private readonly MessageDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserServiceClient _userService;
-        
+
         public MessageController(MessageDbContext context, IMapper mapper, UserServiceClient userService)
         {
             _context = context;
             _mapper = mapper;
             _userService = userService;
-            
+
         }
         [Authorize]
         [HttpPost("send")]
@@ -48,11 +48,12 @@ namespace MessageService.Controllers
             await _context.Messages.AddAsync(newMessage);
             await _context.SaveChangesAsync();
 
-            return Ok(new { 
+            return Ok(new
+            {
                 message = "Message sent!",
-                newMessageId = newMessage.Id, 
-                chatId = newMessage.ChatId, 
-                timestamp = newMessage.Timestamp 
+                newMessageId = newMessage.Id,
+                chatId = newMessage.ChatId,
+                timestamp = newMessage.Timestamp
             });
         }
 
@@ -64,7 +65,7 @@ namespace MessageService.Controllers
                 .Where(m => m.ChatId == chatId)
                 .OrderBy(m => m.Timestamp)
                 .ToListAsync();
-            
+
             var messagesDtos = new List<MessageDTO>();
             var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer", "");
             foreach (var msg in messages)
@@ -79,7 +80,7 @@ namespace MessageService.Controllers
         }
         [Authorize]
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteMessage (int id)
+        public async Task<IActionResult> DeleteMessage(int id)
         {
             var message = await _context.Messages.FindAsync(id);
 
@@ -106,7 +107,7 @@ namespace MessageService.Controllers
         {
             if (string.IsNullOrWhiteSpace(dto.Content))
             {
-                return BadRequest(new {message = "Message content cannot be empty"});
+                return BadRequest(new { message = "Message content cannot be empty" });
             }
             var message = await _context.Messages.FindAsync(id);
 
@@ -130,7 +131,7 @@ namespace MessageService.Controllers
             return Ok(new { message = "Message updated" });
         }
 
-        
-        
+
+
     }
 }

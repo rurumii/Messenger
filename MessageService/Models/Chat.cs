@@ -10,7 +10,6 @@ namespace MessageService.Models
         [Required]
         public int User2Id { get; set; }
         public string? Name { get; set; }
-      //  public bool IsGroup { get; set; } = false; // 
         public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

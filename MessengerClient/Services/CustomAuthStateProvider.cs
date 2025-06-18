@@ -18,7 +18,7 @@ namespace MessengerClient.Services
         {
             var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
 
-            if (string.IsNullOrEmpty(token)) 
+            if (string.IsNullOrEmpty(token))
             {
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
@@ -35,7 +35,7 @@ namespace MessengerClient.Services
             var jsonBytes = ParseBase64WithoutPadding(payload);
             var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
 
-            foreach (var kvp  in keyValuePairs)
+            foreach (var kvp in keyValuePairs)
             {
                 claims.Add(new Claim(kvp.Key, kvp.Value.ToString()));
             }
@@ -45,7 +45,7 @@ namespace MessengerClient.Services
 
         private byte[] ParseBase64WithoutPadding(string base64)
         {
-            switch(base64.Length % 4)
+            switch (base64.Length % 4)
             {
                 case 2: base64 += "=="; break;
                 case 3: base64 += "="; break;

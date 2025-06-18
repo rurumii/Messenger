@@ -4,7 +4,7 @@ using System.Text;
 using UserService.Data;
 using UserService.Mapping;
 using UserService.Services;
- 
+
 
 namespace UserService
 {
@@ -17,7 +17,7 @@ namespace UserService
             builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(c=>
+            builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new() { Title = "UserService", Version = "v1" });
 
@@ -65,7 +65,7 @@ namespace UserService
                 });
             builder.Services.AddAuthorization();
 
-            builder.Services.AddDbContext<UserDbContext>(options => 
+            builder.Services.AddDbContext<UserDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddCors(options =>

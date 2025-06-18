@@ -24,7 +24,7 @@ namespace MessageService.Data
                 .HasForeignKey(m => m.ChatId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            
+
         }
     }
 }

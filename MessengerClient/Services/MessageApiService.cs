@@ -70,7 +70,7 @@ namespace MessengerClient.Services
                 return null;
             }
             return await response.Content.ReadFromJsonAsync<List<MessageDTO>>();
-                
+
         }
         public async Task<bool> SendMessageAsync(SendMessageDTO message)
         {
@@ -92,7 +92,7 @@ namespace MessengerClient.Services
             return response.IsSuccessStatusCode;
         }
 
-         public async Task<bool> DeleteMessageAsync (int id)
+        public async Task<bool> DeleteMessageAsync(int id)
         {
             var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
             Console.WriteLine("Delete TOKEN:" + token);
@@ -109,7 +109,7 @@ namespace MessengerClient.Services
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> UpdateMessageAsync (int id, UpdateMessageDto dto)
+        public async Task<bool> UpdateMessageAsync(int id, UpdateMessageDto dto)
         {
             var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
             Console.WriteLine("Edit TOKEN:" + token);
@@ -120,7 +120,7 @@ namespace MessengerClient.Services
 
             var request = new HttpRequestMessage(HttpMethod.Put, $"https://localhost:7130/api/messages/update/{id}")
             {
-                Content = JsonContent.Create(dto) //  передаём DTO как тело запроса
+                Content = JsonContent.Create(dto)
             };
 
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);

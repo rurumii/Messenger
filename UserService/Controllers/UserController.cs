@@ -12,7 +12,7 @@ namespace UserService.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    public class UserController : ControllerBase    
+    public class UserController : ControllerBase
     {
         private readonly UserDbContext _context;
         private readonly IMapper _mapper;
@@ -30,12 +30,12 @@ namespace UserService.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationDTO dto)
         {
-           if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-           if (await _context.Users.AnyAsync(u => u.Email == dto.Email ))
+            if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
             {
                 return Conflict(new { message = "User with this email already exists" });
             }
@@ -56,10 +56,10 @@ namespace UserService.Controllers
                 username = user.Username,
                 email = user.Email,
                 profileImageUrl = "/img/default-avatar.png"
-        });
+            });
 
         }
-        
+
         [HttpGet("find/by-id/{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
@@ -83,7 +83,7 @@ namespace UserService.Controllers
         [Authorize]
         [HttpDelete("deleteuser/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
-        { 
+        {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             if (currentUserId != id)
             {
@@ -161,7 +161,7 @@ namespace UserService.Controllers
             {
                 return NotFound(new { message = "User not found" });
             }
-            
+
             _mapper.Map(updatedUser, user);
 
             await _context.SaveChangesAsync();
@@ -201,8 +201,8 @@ namespace UserService.Controllers
             {
                 return NotFound(new { message = "User not found" });
             }
-            
-            var existingFriends = await _context.Friends.FirstOrDefaultAsync(f => 
+
+            var existingFriends = await _context.Friends.FirstOrDefaultAsync(f =>
             f.UserId == dto.UserId && f.FriendUserId == dto.FriendUserId);
 
             if (existingFriends != null)
@@ -239,7 +239,7 @@ namespace UserService.Controllers
         }
 
         [HttpGet("friend/{userId}")]
-        public async Task<IActionResult> GetFriendshipByUserId (int userId)
+        public async Task<IActionResult> GetFriendshipByUserId(int userId)
         {
             var friends = await _context.Friends
                 .Where(f => f.UserId == userId)

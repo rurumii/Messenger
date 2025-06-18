@@ -7,7 +7,7 @@ namespace MessengerClient.Services
     {
         private readonly JSRuntime _jsRuntime;
 
-        public AuthorizedHandler (JSRuntime jsRuntime)
+        public AuthorizedHandler(JSRuntime jsRuntime)
         {
             _jsRuntime = jsRuntime;
         }
