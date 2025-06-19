@@ -17,7 +17,7 @@
             <button class="sidebar-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
                 stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-user-icon lucide-book-user"><path
                     d="M15 13a3 3 0 1 0-6 0" /><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" /><circle cx="12" cy="8" 
-                        r="2" /></svg>Friends</button>
+                    r="2" /></svg>Friends</button>
             <button class="sidebar-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
                 stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1
                 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 
@@ -70,7 +70,23 @@
                     <div class="chat-item @(chat.Id == selectedChatId ? "selected" : "")"
                     @onclick="() => SelectChat(chat.Id)">
                         @GetChatDisplayName(chat)
+                        <button @onclick="() => AskDeleteChat(chat.Id)" title="Delete" class="icon-button">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+
+                        @if (chatIdPendingDelete == chat.Id)
+                        {
+
+                            <div class="confirm-popup-inline">
+                                <span>Delete?</span>
+                                <button @onclick="() => ConfirmDeleteChat(chat.Id)">Yes</button>
+                                <button @onclick="CancelDeleteChat">No</button>
+                            </div>
+                        }
                     </div>
+
+
+
                 }
             }
         </div>
@@ -95,9 +111,9 @@
                 {
                     <button class="logout-btn" @onclick="() => isLogoutPending = true" title="Log out">
                         <svg xmlns="http://www.w3.org/2000/svg" class="logout-icon" fill="none" viewBox="0 0 24 24"
-                             stroke-width="1.5" stroke="currentColor">
+                        stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                            d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
                         </svg>
                     </button>
 
@@ -234,10 +250,11 @@
     private Dictionary<int, FoundUserDTO> companions = new();
     private int? messageIdPendingDelete = null;
     private int? messageIdPendingEdit = null;
-    private string updatedMessageContent = "";  // Временное хранилище текста
+    private string updatedMessageContent = "";  
     private ElementReference messageListRef;
     private bool shouldScrollToBottom = false;
     private bool isLogoutPending = false;
+    private int? chatIdPendingDelete = null;
 
 
     protected override async Task OnInitializedAsync()
@@ -283,8 +300,7 @@
                     }
                 }
             }
-        } 
-        // обработка ошибок
+        }
         catch (Exception ex)
         {
             Console.WriteLine($"[Init error] {ex.Message}");
@@ -318,7 +334,6 @@
     {
         User1Id = userId,
         User2Id = foundUser.Id,
-            // Name = foundUser.Username
     };
 
         var success = await MessageService.CreateChatAsync(chatDto);
@@ -335,7 +350,7 @@
             canCreate = false;
         }
     }
-    // 
+
     private string GetChatDisplayName(ChatDTO chat)
     {
         int companionId = chat.User1Id == userId ? chat.User2Id : chat.User1Id;
@@ -394,6 +409,9 @@
     {
         return chats?.FirstOrDefault(c => c.Id == selectedChatId);
     }
+
+    // == delete message ==
+
     private void AskDelete(int id)
     {
         messageIdPendingDelete = id;
@@ -407,6 +425,9 @@
     {
         messageIdPendingDelete = null;
     }
+    //
+
+    // == edit message ==
     private void StartUpdate(int id, string content)
     {
         messageIdPendingEdit = id;
@@ -439,6 +460,7 @@
             updatedMessageContent = "";
         }
     }
+    //
     private async Task ScrollToBottomAsync()
     {
         await InvokeAsync(async () =>
@@ -460,4 +482,39 @@
         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "authToken");
         Navigation.NavigateTo("/");
     }
+    // == delete chat ==
+    private void AskDeleteChat(int selectedChatId)
+    {
+        chatIdPendingDelete = selectedChatId;
+    }
+    private  async Task ConfirmDeleteChat(int selectedChatId)
+    {
+        var success = await MessageService.DeleteChat(selectedChatId);
+
+        if (success)
+        {
+            var chatToRemove = chats.FirstOrDefault(c => c.Id == selectedChatId);
+            if (chatToRemove != null)
+            {
+                chats.Remove(chatToRemove);
+
+                if (this.selectedChatId == selectedChatId)
+                {
+                    this.selectedChatId = null;
+                    messages = null;
+                }
+
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            Console.WriteLine("Failed to delete chat");
+        }
+    }
+    private void CancelDeleteChat()
+    {
+        chatIdPendingDelete = null;
+    }
+    //
 }

@@ -128,5 +128,21 @@ namespace MessengerClient.Services
             var response = await _http.SendAsync(request);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> DeleteChat(int chatId)
+        {
+            var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+            Console.WriteLine("Edit TOKEN:" + token);
+            if (string.IsNullOrEmpty(token))
+            {
+                return false;
+            }
+
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"https://localhost:7130/api/chats/delete/{chatId}");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _http.SendAsync(request);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

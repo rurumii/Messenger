@@ -82,7 +82,7 @@ namespace MessageService.Controllers
         }
 
         [Authorize]
-        [HttpGet("{chatId}")]
+        [HttpGet("get/{chatId}")]
         public async Task<IActionResult> GetChatById(int chatId)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -103,7 +103,7 @@ namespace MessageService.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{chatId}")]
+        [HttpDelete("delete/{chatId}")]
         public async Task<IActionResult> DeleteChat(int chatId)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
