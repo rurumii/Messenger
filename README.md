@@ -1,7 +1,6 @@
-# 🐾 Meowly — A Cozy Messenger
+# 🐾 Meowly — A Cozy Messenger App
 
-Meowly is a cozy and minimalistic messenger inspired by the atmosphere of sleepy nights and purring cats.
-It is a university project built with microservices architecture using ASP.NET Core and Blazor WebAssembly.
+Meowly is a minimalistic and cozy messenger inspired by Telegram, created as university project. It is built with ASP.Net Core and Blazor WebAssembly using a microservices-based architecture.
 
 ---
 
@@ -10,7 +9,7 @@ It is a university project built with microservices architecture using ASP.NET C
 - User registration and authentication
 - Chat creation and listing
 - Sending, editing and deleting messages
-- User search by tag
+- User search by unique tag
 - Dark theme and soft interface
 
 ---
@@ -33,6 +32,13 @@ The project is split into two microservices:
 - `MessageService`: manages chats and message exchange
 
 Each service has its own controller, DTOs, and logic. They communicate via HTTP requests and are decoupled.
+---
+## In Development
+Currently working on:
+- Pinning chats and messages
+- Basic profile editing (nickname, status, profile picture..)
+- Light/Dark theme switching
+- Group chats, channels
 
 ---
 
