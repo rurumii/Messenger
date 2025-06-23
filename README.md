@@ -30,7 +30,7 @@ The project is split into two microservices:
 - `UserService`: handles user registration, login, and identity management
 - `MessageService`: manages chats and message exchange
   
-Each service has it own controllers, DTOs. They communicate via HTTP requests and are decoupled.
+Each service has it own controllers, DTOs, and business logic. They communicate via HTTP requests and are decoupled.
 
 ---
 ## In Development
