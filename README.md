@@ -27,11 +27,11 @@ Meowly is a minimalistic and cozy messenger inspired by Telegram, created as uni
 ## Architecture Overview
 
 The project is split into two microservices:
-
 - `UserService`: handles user registration, login, and identity management
 - `MessageService`: manages chats and message exchange
+  
+Each service has it own controllers, DTOs. They communicate via HTTP requests and are decoupled.
 
-Each service has its own controller, DTOs, and logic. They communicate via HTTP requests and are decoupled.
 ---
 ## In Development
 Currently working on:
