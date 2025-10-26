@@ -45,7 +45,6 @@ Currently working on:
 ## Screenshots
 
 ![Login Page](https://github.com/user-attachments/assets/2dddab88-aa9e-4781-bcda-d2368ed863ab)
-![Main Page](https://github.com/user-attachments/assets/c907c1cb-0b7d-4f76-b0fe-4f7793ef0c2d)
 ![Chat](https://github.com/user-attachments/assets/8be3d7bd-2447-4fdd-8c40-d8c320e70949)
 
 ---
