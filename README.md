@@ -1,4 +1,4 @@
-# 🐾 Meowly — A Cozy Messenger App
+# 🐾 Meowly — A Messenger App
 
 Meowly is a minimalistic and cozy messenger inspired by Telegram, created as university project. It is built with ASP.Net Core and Blazor WebAssembly using a microservices-based architecture.
 
