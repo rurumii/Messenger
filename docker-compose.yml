@@ -5,7 +5,7 @@ services:
   userservice:
     build:
       context: .          
-      dockerfile: Dockerfile 
+      dockerfile: dockerfile 
       args:
         SERVICE_PROJECT_PATH: UserService/UserService.csproj
     ports:
@@ -20,7 +20,7 @@ services:
   messageservice:
     build:
       context: .           
-      dockerfile: Dockerfile 
+      dockerfile: dockerfile 
       args:
         SERVICE_PROJECT_PATH: MessageService/MessageService.csproj
     ports:
