@@ -1,25 +1,43 @@
 
+#FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+#WORKDIR /src
+
+#COPY *.sln .
+#COPY UserService/*.csproj ./UserService/
+#COPY MessageService/*.csproj ./MessageService/
+#COPY MessengerClient/*.csproj ./MessengerClient/
+
+#COPY . .
+
+#WORKDIR "/src/UserService"
+#RUN dotnet publish "UserService.csproj" -c Release -o /app/publish
+
+#FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+#WORKDIR /app
+
+#COPY --from=build /app/publish .
+
+#ENV ASPNETCORE_URLS=http://+:8080
+#EXPOSE 8080
+
+#ENTRYPOINT ["dotnet", "UserService.dll"]
+
+
+ARG SERVICE_PROJECT_PATH
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-
 COPY *.sln .
 COPY UserService/*.csproj ./UserService/
 COPY MessageService/*.csproj ./MessageService/
 COPY MessengerClient/*.csproj ./MessengerClient/
-
 RUN dotnet restore "Messenger.sln"
-
 COPY . .
-
-WORKDIR "/src/UserService"
-RUN dotnet publish "UserService.csproj" -c Release -o /app/publish
+WORKDIR /src
+RUN dotnet publish "${SERVICE_PROJECT_PATH}" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-
 COPY --from=build /app/publish .
 
-ENV ASPNETCORE_URLS=http://+:8080
-EXPOSE 8080
-
-ENTRYPOINT ["dotnet", "UserService.dll"]
+ENTRYPOINT dotnet ${SERVICE_NAME}.dll

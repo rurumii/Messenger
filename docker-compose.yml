@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # UserService
+  userservice:
+    build:
+      context: .          
+      dockerfile: Dockerfile 
+      args:
+        SERVICE_PROJECT_PATH: UserService/UserService.csproj
+    ports:
+      - "8080:8080" 
+    environment:
+      - SERVICE_NAME=UserService
+      - ASPNETCORE_URLS=http://+:8080
+    networks:
+      - meowly-network
+
+  # MessageService 
+  messageservice:
+    build:
+      context: .           
+      dockerfile: Dockerfile 
+      args:
+        SERVICE_PROJECT_PATH: MessageService/MessageService.csproj
+    ports:
+      - "8081:8080" 
+    environment:
+      - SERVICE_NAME=MessageService
+      - ASPNETCORE_URLS=http://+:8080
+    networks:
+      - meowly-network
+      
+networks:
+  meowly-network:
+    driver: bridge
