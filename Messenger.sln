@@ -23,6 +23,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		dotnet-build.yml = dotnet-build.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{FD5CC086-13E5-4591-8543-590192E1102F}"
+	ProjectSection(SolutionItems) = preProject
+		messageservice-deployment.yaml = messageservice-deployment.yaml
+		messageservice-service.yaml = messageservice-service.yaml
+		userservice-deployment.yaml = userservice-deployment.yaml
+		userservice-service.yaml = userservice-service.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
