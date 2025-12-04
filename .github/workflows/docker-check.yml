@@ -1,0 +1,20 @@
+name: Docker Build Check
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  build-docker:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Docker Image
+      run: |
+        docker build \
+          --build-arg SERVICE_PROJECT_PATH=UserService/UserService.csproj \
+          -t test-image .
