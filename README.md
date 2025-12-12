@@ -33,7 +33,7 @@ The project is split into two microservices:
 Each service has it own controllers, DTOs, and business logic. They communicate via HTTP requests and are decoupled.
 
 ---
-## In Development
+## Roadmap
 Currently working on:
 - Pinning chats and messages
 - Basic profile editing (nickname, status, profile picture..)
